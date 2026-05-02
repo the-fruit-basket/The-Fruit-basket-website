@@ -1,230 +1,155 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fruit Basket</title>
-
+<title>Fresh Basket</title>
 <style>
 body {
+font-family: Arial;
 margin: 0;
-font-family: Arial, sans-serif;
-background: #f7f5f0;
-color: #333;
+background: #f5f5f5;
 }
 
 header {
+background: green;
+color: white;
+padding: 15px;
 text-align: center;
-padding: 50px 20px;
-background: white;
+font-size: 24px;
 }
 
-header h1 {
-margin: 0;
-font-size: 40px;
-letter-spacing: 1px;
+.container {
+padding: 20px;
 }
 
-header p {
-margin-top: 10px;
-color: #777;
+h2 {
+margin-top: 30px;
 }
 
-.contact {
-margin-top: 12px;
-font-weight: bold;
-color: #444;
-}
-
-h2.section-title {
-text-align: center;
-margin-top: 40px;
-font-size: 26px;
-color: #444;
-}
-
-.products {
+.grid {
 display: grid;
-grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-gap: 20px;
-padding: 20px 30px 40px;
-max-width: 1000px;
-margin: auto;
+grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+gap: 15px;
 }
 
 .card {
 background: white;
-padding: 20px;
-border-radius: 14px;
-box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-transition: 0.3s;
+padding: 15px;
+border-radius: 10px;
+box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
 
-.card:hover {
-transform: translateY(-5px);
-}
-
-.card h3 {
-margin: 0 0 10px;
-font-size: 20px;
-}
-
-.card p {
-margin: 5px 0;
-color: #666;
-}
-
-.price {
+button {
+background: green;
+color: white;
+border: none;
+padding: 8px;
+border-radius: 5px;
+cursor: pointer;
 margin-top: 10px;
-font-weight: bold;
-font-size: 15px;
 }
 
-footer {
-text-align: center;
-padding: 25px;
+#cart {
+position: fixed;
+right: 0;
+top: 0;
+width: 250px;
+height: 100%;
 background: white;
-color: #777;
-font-size: 14px;
+border-left: 2px solid #ccc;
+padding: 10px;
+overflow-y: auto;
 }
 </style>
-
 </head>
 
 <body>
 
-<header>
-<h1>Fruit Basket</h1>
-<p>Fresh, premium fruits & vegetables daily</p>
+<header>Fresh Basket 🛒</header>
 
-<div class="contact">
-📞 Call us: 08 9364 3417
-</div>
-</header>
+<div class="container">
 
-<!-- 🍎 FRUITS -->
-<h2 class="section-title">Fruits</h2>
-<section class="products">
+<h2>Fruits</h2>
+<div class="grid" id="fruits"></div>
 
-<div class="card">
-<h3>Watermelon</h3>
-<p>Fresh juicy sliced watermelon</p>
-<div class="price">$5.99/kg</div>
+<h2>Vegetables</h2>
+<div class="grid" id="veggies"></div>
+
+<h2>Kitchen</h2>
+<div class="grid" id="kitchen"></div>
+
 </div>
 
-<div class="card">
-<h3>Pink Lady Apples</h3>
-<p>Crisp sweet premium apples</p>
-<div class="price">$9.99/kg</div>
+<div id="cart">
+<h3>Cart</h3>
+<ul id="cart-items"></ul>
+<p><b>Total: $<span id="total">0</span></b></p>
 </div>
 
-<div class="card">
-<h3>Bananas</h3>
-<p>Fresh daily bananas</p>
-<div class="price">$4.50/kg</div>
-</div>
+<script>
+const fruits = [
+["Watermelon sliced",5.99],["Pink lady apples",9.99],["Grapefruit pink",5.99],
+["Peaches White",12.99],["Apple royal gala",9.99],["Nectarines white",12.99],
+["Granny smith apples",9.99],["Navel Oranges",9.99],["Apple Fuji",11.99],
+["Orange Mid knight",9.99],["Grapes Green Loose",19.99],["Grapes Red Loose",19.99],
+["Plums",9.99],["Rosata Pears",9.99],["Pears Red",7.99],
+["Mandarin Tango Seedless",7.99],["Plums Teagan Blue",9.99],
+["Pears Brown Bosc",8.99],["Mandarin Loose",7.99],
+["Kiwifruit",2.99],["Apple Mi",9.99],["Apricots",29.99],
+["Apple Regal gala",9.99],["Peaches Yellow",12.99]
+];
 
-<div class="card">
-<h3>Oranges</h3>
-<p>Juicy vitamin-rich oranges</p>
-<div class="price">$6.99/kg</div>
-</div>
+const veggies = [
+["Cabbage Half",2.99],["Cabbage Red Half",2.99],["Cabbage Savoy Half",1.99],
+["Cauliflower Half",2.99],["Cabbage Chinese Half",2.99],
+["Broccoli Cauliflower Pieces",4.54],["Broccoli Bunch",3.99],
+["Savoy Cabbage",5.99],["Chinese Cabbage",4.99],["Red Cabbage",5.99],
+["Cabbage Green",4.99],["Cauliflower Whole",5.99],["Large Leeks",3.99],
+["Pak Choy",2.99],["Bok Choy",2.99],["Choi Sum",2.99],
+["Green Festival",3.99],["Red Festival",3.99],
+["Silverbeet Bunch",3.99],["Kale",3.99],["Lettuce Iceberg",3.99],
+["Basil Loose",29.99],["Parsley Curly",3.99],["Parsley Italian",3.99],
+["Mint",3.99],["Coriander",4.99],["Celery Half",1.99],
+["Spring Onion Loose",9.99],["Celery Sticks",9.99],
+["Spring Onion Bunch",3.99],["Lettuce Cos",2.99],
+["Celery Whole",3.99],["Baby Cos Lettuce",2.99]
+];
 
-<div class="card">
-<h3>Grapes</h3>
-<p>Sweet seedless grapes</p>
-<div class="price">$8.99/kg</div>
-</div>
+const kitchen = [
+["Regular Fruit Platter",29.99],
+["Large Fruit Platter",55.00]
+];
 
-<div class="card">
-<h3>Mangoes</h3>
-<p>Seasonal sweet mangoes</p>
-<div class="price">$10.99/kg</div>
-</div>
+let total = 0;
 
-</section>
+function displayItems(items, containerId){
+const container = document.getElementById(containerId);
+items.forEach(item => {
+const div = document.createElement("div");
+div.className = "card";
+div.innerHTML = `
+<h4>${item[0]}</h4>
+<p>$${item[1]}</p>
+<button onclick="addToCart('${item[0]}', ${item[1]})">Add to Cart</button>
+`;
+container.appendChild(div);
+});
+}
 
-<!-- 🥦 VEGETABLES -->
-<h2 class="section-title">Vegetables</h2>
-<section class="products">
+function addToCart(name, price){
+const cart = document.getElementById("cart-items");
+const li = document.createElement("li");
+li.textContent = name + " - $" + price;
+cart.appendChild(li);
 
-<div class="card">
-<h3>Carrots</h3>
-<p>Fresh crunchy carrots</p>
-<div class="price">$3.99/kg</div>
-</div>
+total += price;
+document.getElementById("total").textContent = total.toFixed(2);
+}
 
-<div class="card">
-<h3>Potatoes</h3>
-<p>All-purpose fresh potatoes</p>
-<div class="price">$4.50/kg</div>
-</div>
+displayItems(fruits, "fruits");
+displayItems(veggies, "veggies");
+displayItems(kitchen, "kitchen");
 
-<div class="card">
-<h3>Onions</h3>
-<p>Brown & red onions</p>
-<div class="price">$3.99/kg</div>
-</div>
-
-<div class="card">
-<h3>Tomatoes</h3>
-<p>Ripe juicy tomatoes</p>
-<div class="price">$5.50/kg</div>
-</div>
-
-<div class="card">
-<h3>Broccoli</h3>
-<p>Fresh green broccoli</p>
-<div class="price">$7.99/kg</div>
-</div>
-
-<div class="card">
-<h3>Cauliflower</h3>
-<p>Fresh white cauliflower</p>
-<div class="price">$6.99 each</div>
-</div>
-
-<div class="card">
-<h3>Spinach</h3>
-<p>Fresh leafy spinach</p>
-<div class="price">$4.99/bunch</div>
-</div>
-
-<div class="card">
-<h3>Lettuce</h3>
-<p>Crisp iceberg lettuce</p>
-<div class="price">$3.50 each</div>
-</div>
-
-<div class="card">
-<h3>Capsicum</h3>
-<p>Red, yellow & green capsicum</p>
-<div class="price">$6.99/kg</div>
-</div>
-
-<div class="card">
-<h3>Garlic</h3>
-<p>Fresh aromatic garlic</p>
-<div class="price">$1.50 each</div>
-</div>
-
-<div class="card">
-<h3>Ginger</h3>
-<p>Fresh ginger root</p>
-<div class="price">$9.99/kg</div>
-</div>
-
-<div class="card">
-<h3>Eggplant</h3>
-<p>Fresh glossy eggplants</p>
-<div class="price">$5.99/kg</div>
-</div>
-
-</section>
-
-<footer>
-© Fruit Basket | Fresh produce in Mount Pleasant | Quality you can trust
-</footer>
+</script>
 
 </body>
 </html>
